@@ -128,7 +128,9 @@ u8 has_new_bits(afl_state_t *afl, u8 *virgin_map) {
 
       }
 
+      mprotect(afl->virgin_bits, MAP_SIZE, PROT_READ | PROT_WRITE);
       *virgin &= ~*current;
+      mprotect(afl->virgin_bits, MAP_SIZE, PROT_READ);
 
     }
 

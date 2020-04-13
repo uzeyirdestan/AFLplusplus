@@ -81,6 +81,9 @@ void afl_state_init(afl_state_t *afl) {
   and out_size are NULL/0 by default. */
   memset(afl, 0, sizeof(afl_state_t));
 
+  afl->virgin_bits = malloc(MAP_SIZE);
+  if (!afl->virgin_bits)
+    FATAL("could not allocate memory for virgin bits");
   afl->w_init = 0.9;
   afl->w_end = 0.3;
   afl->g_max = 5000;

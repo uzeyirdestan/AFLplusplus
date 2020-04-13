@@ -450,7 +450,7 @@ typedef struct afl_state {
       fast_cal,                         /* Try to calibrate faster?         */
       disable_trim;                     /* Never trim in fuzz_one           */
 
-  u8 virgin_bits[MAP_SIZE],             /* Regions yet untouched by fuzzing */
+  u8 *virgin_bits,             /* Regions yet untouched by fuzzing */
       virgin_tmout[MAP_SIZE],           /* Bits we haven't seen in tmouts   */
       virgin_crash[MAP_SIZE];           /* Bits we haven't seen in crashes  */
 
