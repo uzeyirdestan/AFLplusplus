@@ -81,8 +81,11 @@ void afl_state_init(afl_state_t *afl) {
   and out_size are NULL/0 by default. */
   memset(afl, 0, sizeof(afl_state_t));
 
-  afl->virgin_bits = malloc(MAP_SIZE);
-  if (!afl->virgin_bits)
+  uint64_t get_size = getpagesize();
+  if (get_size < MAP_SIZE)
+    get_size = ((MAP_SIZE / get_size) + 1) * get_size;
+  afl->virgin_bits = (u8*) mmap(NULL, get_size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+  if (!afl->virgin_bits || afl->virgin_bits == MAP_FAILED)
     FATAL("could not allocate memory for virgin bits");
   afl->w_init = 0.9;
   afl->w_end = 0.3;
