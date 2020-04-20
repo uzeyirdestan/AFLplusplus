@@ -341,12 +341,12 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
 
     }
 
+    u8 hnb = has_new_bits(afl, afl->virgin_bits);
+    if (hnb > new_bits) new_bits = hnb;
+
     cksum = hash32(afl->fsrv.trace_bits, MAP_SIZE, HASH_CONST);
 
     if (q->exec_cksum != cksum) {
-
-      u8 hnb = has_new_bits(afl, afl->virgin_bits);
-      if (hnb > new_bits) new_bits = hnb;
 
       if (q->exec_cksum) {
 
