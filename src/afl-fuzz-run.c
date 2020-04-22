@@ -344,6 +344,10 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
     u8 hnb = has_new_bits(afl, afl->virgin_bits);
     if (hnb > new_bits) new_bits = hnb;
 
+    for (u32 i = 0; i < MAP_SIZE; i++)
+      if (afl->fsrv.trace_bits[i] && afl->virgin_bits[i] == 255)
+        FATAL("map ID %u was not set by has_new_bits although value is %u\n", i, afl->fsrv.trace_bits[i]);
+
     cksum = hash32(afl->fsrv.trace_bits, MAP_SIZE, HASH_CONST);
 
     if (q->exec_cksum != cksum) {
@@ -358,7 +362,7 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
               unlikely(afl->first_trace[i] != afl->fsrv.trace_bits[i])) {
 
             if (afl->virgin_bits[i] == 255)
-              FATAL("edge %u is variable, but is marked undiscovered in virgin bits ...\n", i);
+              FATAL("edge %u is variable, but is marked undiscovered in virgin bits ... [%u/%u/%u/%u]\n", i, afl->var_bytes[i], afl->first_trace[i], afl->fsrv.trace_bits[i], afl->virgin_bits[i]);
             afl->var_bytes[i] = 1;
             
           }
