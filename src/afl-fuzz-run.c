@@ -313,7 +313,12 @@ u8 calibrate_case(afl_state_t *afl, struct queue_entry *q, u8 *use_mem,
       afl->shm.cmplog_mode)
     init_cmplog_forkserver(afl);
 
-  if (q->exec_cksum) memcpy(afl->first_trace, afl->fsrv.trace_bits, MAP_SIZE);
+  if (q->exec_cksum) {
+  
+    memcpy(afl->first_trace, afl->fsrv.trace_bits, MAP_SIZE);
+    (void)has_new_bits(afl, afl->virgin_bits);
+    
+  }
 
   start_us = get_cur_time_us();
 
